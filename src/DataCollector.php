@@ -33,8 +33,8 @@ class DataCollector {
 			'plugins'        => self::collect_plugins(),
 			'themes'         => self::collect_themes(),
 			'custom_fields'  => CustomFields::collect(),
-			'users'          => [],
-			'roles'          => [],
+			'users'          => UserCollector::collect_users(),
+			'roles'          => RoleCollector::collect(),
 		];
 
 		VersionTracker::flush();

@@ -187,6 +187,12 @@ class ReportPusherTest extends TestCase {
 		Functions\when( 'register_activation_hook' )->justReturn( null );
 		Functions\when( 'register_deactivation_hook' )->justReturn( null );
 		Functions\when( 'add_action' )->justReturn( null );
+		Functions\when( 'get_users' )->justReturn( [] );
+		Functions\when( 'is_plugin_active' )->justReturn( false );
+
+		$mock_roles = Mockery::mock( 'WP_Roles' );
+		$mock_roles->roles = [];
+		Functions\when( 'wp_roles' )->justReturn( $mock_roles );
 
 		Functions\when( 'wp_get_theme' )->justReturn(
 			new class() {
