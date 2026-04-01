@@ -48,7 +48,7 @@ class Plugin {
 	 * @return void
 	 */
 	public static function activate(): void {
-		// Activation logic.
+		Cron::schedule();
 	}
 
 	/**
@@ -57,7 +57,7 @@ class Plugin {
 	 * @return void
 	 */
 	public static function deactivate(): void {
-		// Deactivation logic.
+		Cron::unschedule();
 	}
 
 	/**
@@ -67,5 +67,8 @@ class Plugin {
 	 */
 	public static function boot(): void {
 		Settings::register_hooks();
+		Cron::register_hooks();
+
+		add_action( Cron::HOOK, [ Cron::class, 'on_version_check' ] );
 	}
 }

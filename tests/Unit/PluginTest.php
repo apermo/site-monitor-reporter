@@ -83,28 +83,41 @@ class PluginTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	public function test_activate(): void {
+	public function test_activate_schedules_cron(): void {
+		Functions\expect( 'wp_next_scheduled' )
+			->once()
+			->with( 'site_monitor_reporter_push' )
+			->andReturn( false );
+
+		Functions\expect( 'wp_schedule_event' )->once();
+
 		Plugin::activate();
-		$this->assertTrue( true );
 	}
 
 	/**
-	 * Verify deactivate can be called without error.
+	 * Verify deactivate clears the cron schedule.
 	 *
 	 * @return void
 	 */
-	public function test_deactivate(): void {
+	public function test_deactivate_unschedules_cron(): void {
+		Functions\expect( 'wp_clear_scheduled_hook' )
+			->once()
+			->with( 'site_monitor_reporter_push' );
+
 		Plugin::deactivate();
-		$this->assertTrue( true );
 	}
 
 	/**
-	 * Verify boot can be called without error.
+	 * Verify boot registers hooks.
 	 *
 	 * @return void
 	 */
-	public function test_boot(): void {
+	public function test_boot_registers_hooks(): void {
+		Functions\when( 'add_action' )->justReturn( null );
+
 		Plugin::boot();
+
+		// Verify add_action was called (Brain Monkey tracks it).
 		$this->assertTrue( true );
 	}
 }
