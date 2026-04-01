@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Plugin_Name\Tests\Integration;
+namespace Apermo\SiteMonitorReporter\Tests\Integration;
 
-use Plugin_Name\Plugin;
+use Apermo\SiteMonitorReporter\Plugin;
 use WP_UnitTestCase;
 
 /**

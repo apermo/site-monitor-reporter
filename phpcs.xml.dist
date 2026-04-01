@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    name="plugin-name"
+    name="site-monitor-reporter"
     xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/PHPCSStandards/PHP_CodeSniffer/master/phpcs.xsd">
 
-    <description>PHPCS configuration for plugin-name.</description>
+    <description>PHPCS configuration for site-monitor-reporter.</description>
 
     <file>.</file>
     <exclude-pattern>vendor/*</exclude-pattern>
@@ -16,21 +16,21 @@
     <rule ref="WordPress.WP.I18n">
         <properties>
             <property name="text_domain" type="array">
-                <element value="plugin-name"/>
+                <element value="site-monitor-reporter"/>
             </property>
         </properties>
     </rule>
 
     <!--
         Project prefix for global functions, hooks, constants,
-        and namespace roots. E.g. prefix "Plugin_Name" allows
-        namespace Plugin_Name\Admin but flags Other\Admin.
+        and namespace roots. E.g. prefix "Site_Monitor_Reporter" allows
+        namespace Site_Monitor_Reporter\Admin but flags Other\Admin.
     -->
     <rule ref="WordPress.NamingConventions.PrefixAllGlobals">
         <properties>
             <property name="prefixes" type="array">
-                <element value="Plugin_Name"/>
-                <element value="plugin_name"/>
+                <element value="Apermo\SiteMonitorReporter"/>
+                <element value="site_monitor_reporter"/>
             </property>
         </properties>
         <!-- Test bootstrap uses standard WP test globals, not plugin globals. -->

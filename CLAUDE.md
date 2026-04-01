@@ -112,8 +112,8 @@ git merge template/main --allow-unrelated-histories
 ## Placeholder conventions
 
 The setup script replaces these across all files:
-- `plugin-name` → slug (kebab-case)
-- `Plugin_Name` → PascalCase
-- `PLUGIN_NAME` → UPPER_SNAKE_CASE
-- `plugin_name` → snake_case
+- `site-monitor-reporter` → slug (kebab-case)
+- `Site_Monitor_Reporter` → PascalCase
+- `SITE_MONITOR_REPORTER` → UPPER_SNAKE_CASE
+- `site_monitor_reporter` → snake_case
 - Placeholder namespace → chosen namespace
