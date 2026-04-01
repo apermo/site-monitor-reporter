@@ -24,7 +24,7 @@ class ReportPusher {
 
 		$data     = DataCollector::collect();
 		$response = wp_remote_post(
-			$hub_url,
+			\rtrim( $hub_url, '/' ) . '/report',
 			[
 				'headers' => [
 					'Authorization' => 'Bearer ' . $token,
