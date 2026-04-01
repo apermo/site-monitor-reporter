@@ -22,8 +22,10 @@ class DataCollector {
 	 * @return array<string, mixed>
 	 */
 	public static function collect(): array {
+		VersionTracker::reset();
+
 		// phpcs:ignore Apermo.DataStructures.ArrayComplexity.TooManyKeys -- Data transfer payload.
-		return [
+		$data = [
 			'schema_version' => 1,
 			'timestamp'      => ( new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) ) )->format( DateTimeInterface::ATOM ),
 			'site_url'       => site_url(),
@@ -34,6 +36,10 @@ class DataCollector {
 			'users'          => [],
 			'roles'          => [],
 		];
+
+		VersionTracker::flush();
+
+		return $data;
 	}
 
 	/**
@@ -73,7 +79,7 @@ class DataCollector {
 		return [
 			'wp_version'                    => $GLOBALS['wp_version'] ?? '',
 			'wp_update_available'           => $wp_update_available,
-			'wp_version_last_updated'       => null,
+			'wp_version_last_updated'       => VersionTracker::get_last_updated( 'core', 'wordpress', $GLOBALS['wp_version'] ?? '' ),
 			'php_version'                   => \PHP_VERSION,
 			'mysql_version'                 => $mysql_version,
 			'is_multisite'                  => is_multisite(),
@@ -110,7 +116,7 @@ class DataCollector {
 				'version'          => $plugin_data['Version'] ?? '',
 				'update_available' => $update_available,
 				'active'           => \in_array( $file, $active_plugins, true ),
-				'last_updated'     => null,
+				'last_updated'     => VersionTracker::get_last_updated( 'plugin', $slug === '.' ? \basename( $file, '.php' ) : $slug, $plugin_data['Version'] ?? '' ),
 			];
 		}
 
@@ -142,7 +148,7 @@ class DataCollector {
 				'version'          => $theme->get( 'Version' ),
 				'update_available' => $update_available,
 				'active'           => $stylesheet === $active_theme->get_stylesheet(),
-				'last_updated'     => null,
+				'last_updated'     => VersionTracker::get_last_updated( 'theme', $stylesheet, $theme->get( 'Version' ) ),
 			];
 		}
 

@@ -167,7 +167,8 @@ class DataCollectorTest extends TestCase {
 		Functions\when( 'site_url' )->justReturn( 'https://example.tld' );
 		Functions\when( 'is_multisite' )->justReturn( false );
 		Functions\when( 'wp_get_environment_type' )->justReturn( 'production' );
-		Functions\when( 'get_option' )->justReturn( false );
+		Functions\when( 'get_option' )->justReturn( [] );
+		Functions\when( 'update_option' )->justReturn( true );
 		Functions\when( 'get_plugins' )->justReturn( [] );
 		Functions\when( 'wp_get_themes' )->justReturn( [] );
 		Functions\when( 'get_transient' )->justReturn( false );
