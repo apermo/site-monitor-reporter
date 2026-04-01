@@ -68,6 +68,7 @@ class Plugin {
 	public static function boot(): void {
 		Settings::register_hooks();
 		Cron::register_hooks();
+		CustomFields::register_hooks();
 
 		add_action( Cron::HOOK, [ Cron::class, 'on_version_check' ] );
 	}

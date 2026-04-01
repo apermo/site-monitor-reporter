@@ -32,7 +32,7 @@ class DataCollector {
 			'environment'    => self::collect_environment(),
 			'plugins'        => self::collect_plugins(),
 			'themes'         => self::collect_themes(),
-			'custom_fields'  => [],
+			'custom_fields'  => CustomFields::collect(),
 			'users'          => [],
 			'roles'          => [],
 		];
