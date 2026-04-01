@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+// Load WP_CLI stub for unit tests when real WP-CLI is absent.
+if ( ! class_exists( 'WP_CLI' ) ) {
+	require_once __DIR__ . '/../stubs/wp-cli.php';
+}
+
 $wp_tests_dir = getenv( 'WP_TESTS_DIR' );
 
 if ( $wp_tests_dir === false ) {

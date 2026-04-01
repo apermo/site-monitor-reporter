@@ -15,6 +15,8 @@ declare(strict_types=1);
 
 namespace Apermo\SiteMonitorReporter;
 
+use WP_CLI;
+
 \defined( 'ABSPATH' ) || exit();
 
 // Prevent double-loading when active as both plugin and mu-plugin.
@@ -27,3 +29,7 @@ if ( \defined( 'SITE_MONITOR_REPORTER_LOADED' ) ) {
 require_once __DIR__ . '/vendor/autoload.php';
 
 Plugin::init( __FILE__ );
+
+if ( \defined( 'WP_CLI' ) && \WP_CLI ) {
+	WP_CLI::add_command( 'site-monitor', CLI\Commands::class );
+}

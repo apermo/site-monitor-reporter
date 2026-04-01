@@ -6,3 +6,5 @@ parameters:
         - uninstall.php
     bootstrapFiles:
         - stubs/constants.php
+        - stubs/wp-cli-stubs.php
+        - stubs/wp-cli-utils-stubs.php

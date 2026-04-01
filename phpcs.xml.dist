@@ -8,6 +8,8 @@
     <file>.</file>
     <exclude-pattern>vendor/*</exclude-pattern>
     <exclude-pattern>node_modules/*</exclude-pattern>
+    <exclude-pattern>stubs/wp-cli-stubs.php</exclude-pattern>
+    <exclude-pattern>stubs/wp-cli-utils-stubs.php</exclude-pattern>
 
     <arg name="extensions" value="php"/>
 
