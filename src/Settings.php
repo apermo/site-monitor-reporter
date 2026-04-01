@@ -24,6 +24,8 @@ class Settings {
 	public static function register_hooks(): void {
 		add_action( 'admin_menu', [ self::class, 'add_menu_page' ] );
 		add_action( 'admin_init', [ self::class, 'register_settings' ] );
+		add_action( 'admin_post_site_monitor_install_mu', [ self::class, 'handle_install_mu' ] );
+		add_action( 'admin_post_site_monitor_remove_mu', [ self::class, 'handle_remove_mu' ] );
 	}
 
 	/**
@@ -151,8 +153,100 @@ class Settings {
 				submit_button();
 				?>
 			</form>
+
+			<h2>MU-Plugin Loader</h2>
+			<?php self::render_mu_plugin_status(); ?>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Render the mu-plugin installer status and actions.
+	 *
+	 * @return void
+	 */
+	public static function render_mu_plugin_status(): void {
+		$installed = MuPluginInstaller::is_installed();
+		$admin_url = admin_url( 'admin-post.php' );
+
+		if ( $installed ) {
+			echo '<p><span class="dashicons dashicons-yes-alt" style="color:#46b450;"></span> ';
+			echo 'MU-Plugin loader is installed.</p>';
+
+			\printf(
+				'<form method="post" action="%s">',
+				esc_url( $admin_url ),
+			);
+			echo '<input type="hidden" name="action" value="site_monitor_remove_mu" />';
+			wp_nonce_field( 'site_monitor_remove_mu' );
+			submit_button( 'Remove MU-Plugin Loader', 'delete', 'submit', false );
+			echo '</form>';
+		} else {
+			echo '<p><span class="dashicons dashicons-warning" style="color:#dba617;"></span> ';
+			echo 'MU-Plugin loader is not installed.</p>';
+
+			\printf(
+				'<form method="post" action="%s">',
+				esc_url( $admin_url ),
+			);
+			echo '<input type="hidden" name="action" value="site_monitor_install_mu" />';
+			wp_nonce_field( 'site_monitor_install_mu' );
+			submit_button( 'Install MU-Plugin Loader', 'primary', 'submit', false );
+			echo '</form>';
+		}
+	}
+
+	/**
+	 * Handle mu-plugin installation request.
+	 *
+	 * @return void
+	 */
+	public static function handle_install_mu(): void {
+		check_admin_referer( 'site_monitor_install_mu' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You do not have permission to do this.', 'site-monitor-reporter' ) );
+		}
+
+		$success = MuPluginInstaller::install();
+
+		if ( ! $success ) {
+			$content = MuPluginInstaller::get_loader_content();
+			$path    = MuPluginInstaller::get_loader_path();
+
+			wp_die(
+				\sprintf(
+					'<h1>Could not write MU-Plugin loader</h1>'
+					. '<p>Please create the file manually at <code>%s</code> with this content:</p>'
+					. '<pre>%s</pre>'
+					. '<p><a href="%s">Back to settings</a></p>',
+					esc_html( $path ),
+					esc_html( $content ),
+					esc_url( admin_url( 'options-general.php?page=site-monitor-reporter' ) ),
+				),
+			);
+		}
+
+		wp_safe_redirect( admin_url( 'options-general.php?page=site-monitor-reporter&mu-installed=1' ) );
+		exit();
+	}
+
+	/**
+	 * Handle mu-plugin removal request.
+	 *
+	 * @return void
+	 */
+	public static function handle_remove_mu(): void {
+		check_admin_referer( 'site_monitor_remove_mu' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You do not have permission to do this.', 'site-monitor-reporter' ) );
+		}
+
+		MuPluginInstaller::uninstall();
+
+		wp_safe_redirect( admin_url( 'options-general.php?page=site-monitor-reporter&mu-removed=1' ) );
+		exit();
 	}
 
 	/**

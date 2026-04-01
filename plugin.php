@@ -1,7 +1,7 @@
 <?php
 /**
- * Plugin Name: Site_Monitor_Reporter
- * Description: A WordPress plugin.
+ * Plugin Name: Site Monitor Reporter
+ * Description: Pushes site health data to a central monitoring hub.
  * Version:     0.1.0
  * Author:      Christoph Daum
  * Author URI:  https://apermo.de
@@ -16,6 +16,13 @@ declare(strict_types=1);
 namespace Apermo\SiteMonitorReporter;
 
 \defined( 'ABSPATH' ) || exit();
+
+// Prevent double-loading when active as both plugin and mu-plugin.
+if ( \defined( 'SITE_MONITOR_REPORTER_LOADED' ) ) {
+	return;
+}
+
+\define( 'SITE_MONITOR_REPORTER_LOADED', true );
 
 require_once __DIR__ . '/vendor/autoload.php';
 
