@@ -31,6 +31,17 @@ define( 'SITE_BOOKKEEPER_HUB_URL', 'https://monitor.example.tld' );
 define( 'SITE_BOOKKEEPER_TOKEN', 'your-site-token-here' );
 ```
 
+### HTTPS Requirement
+
+The hub URL **must use HTTPS**. The plugin rejects HTTP URLs in the settings form and refuses to push reports
+over plain HTTP. This protects your authentication token from being transmitted in clear text.
+
+For local development (e.g. DDEV), you can bypass this check by defining:
+
+```php
+define( 'SITE_BOOKKEEPER_ALLOW_HTTP', true );
+```
+
 ## WP-CLI Commands
 
 ```bash

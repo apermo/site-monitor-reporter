@@ -132,6 +132,16 @@ class Commands {
 			return;
 		}
 
+		if ( ! Settings::is_https( $hub_url ) ) {
+			if ( Settings::is_http_allowed() ) {
+				WP_CLI::warning( 'Hub URL uses plain HTTP. This is allowed via SITE_BOOKKEEPER_ALLOW_HTTP but not recommended for production.' );
+			} else {
+				WP_CLI::error( 'Hub URL must use HTTPS. Define SITE_BOOKKEEPER_ALLOW_HTTP to allow HTTP for local development.' );
+
+				return;
+			}
+		}
+
 		WP_CLI::log( 'Testing connection to ' . $hub_url . '...' );
 
 		$response = wp_remote_get(

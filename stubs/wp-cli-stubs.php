@@ -23,6 +23,12 @@ class WP_CLI {
 	public static function success( string $message ): void {}
 
 	/**
+	 * @param string $message
+	 * @return void
+	 */
+	public static function warning( string $message ): void {}
+
+	/**
 	 * @param string|WP_Error $message
 	 * @param bool $exit
 	 * @return void

@@ -88,7 +88,7 @@ class Settings {
 			'site_bookkeeper_hub_url',
 			[
 				'type'              => 'string',
-				'sanitize_callback' => 'esc_url_raw',
+				'sanitize_callback' => [ self::class, 'sanitize_hub_url' ],
 				'default'           => '',
 			],
 		);
@@ -130,11 +130,20 @@ class Settings {
 	/**
 	 * Get the hub URL, preferring the constant over the option.
 	 *
+	 * Returns empty when the URL uses plain HTTP and
+	 * SITE_BOOKKEEPER_ALLOW_HTTP is not set.
+	 *
 	 * @return string
 	 */
 	public static function get_hub_url(): string {
 		if ( self::is_hub_url_constant() ) {
-			return \SITE_BOOKKEEPER_HUB_URL;
+			$url = \SITE_BOOKKEEPER_HUB_URL;
+
+			if ( ! self::is_https( $url ) && ! self::is_http_allowed() ) {
+				return '';
+			}
+
+			return $url;
 		}
 
 		if ( self::is_network_mode() ) {
@@ -180,6 +189,54 @@ class Settings {
 	}
 
 	/**
+	 * Check if a URL uses HTTPS.
+	 *
+	 * @param string $url URL to check.
+	 *
+	 * @return bool
+	 */
+	public static function is_https( string $url ): bool {
+		return \str_starts_with( $url, 'https://' );
+	}
+
+	/**
+	 * Check if plain HTTP is explicitly allowed.
+	 *
+	 * @return bool
+	 */
+	public static function is_http_allowed(): bool {
+		return \defined( 'SITE_BOOKKEEPER_ALLOW_HTTP' )
+			&& \SITE_BOOKKEEPER_ALLOW_HTTP;
+	}
+
+	/**
+	 * Sanitize the hub URL on save.
+	 *
+	 * Rejects URLs that do not use HTTPS unless
+	 * SITE_BOOKKEEPER_ALLOW_HTTP is defined and truthy.
+	 *
+	 * @param string $url The submitted URL.
+	 *
+	 * @return string Sanitized URL or previous value on rejection.
+	 */
+	public static function sanitize_hub_url( string $url ): string {
+		$url = esc_url_raw( $url );
+
+		if ( $url !== '' && ! self::is_https( $url ) && ! self::is_http_allowed() ) {
+			add_settings_error(
+				'site_bookkeeper_hub_url',
+				'invalid_scheme',
+				'The hub URL must use HTTPS.',
+				'error',
+			);
+
+			return (string) get_option( 'site_bookkeeper_hub_url', '' );
+		}
+
+		return $url;
+	}
+
+	/**
 	 * Handle network admin settings form submission.
 	 *
 	 * @return void
@@ -191,9 +248,9 @@ class Settings {
 			wp_die( esc_html__( 'You do not have permission to do this.', 'site-bookkeeper-reporter' ) );
 		}
 
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above via check_admin_referer.
-		$hub_url = isset( $_POST['site_bookkeeper_hub_url'] )
-			? esc_url_raw( (string) wp_unslash( $_POST['site_bookkeeper_hub_url'] ) )
+		$hub_url = isset( $_POST['site_bookkeeper_hub_url'] ) // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing -- sanitize_hub_url calls esc_url_raw; nonce verified above.
+			? self::sanitize_hub_url( (string) wp_unslash( $_POST['site_bookkeeper_hub_url'] ) )
 			: '';
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above via check_admin_referer.

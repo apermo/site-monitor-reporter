@@ -22,6 +22,10 @@ class ReportPusher {
 			return false;
 		}
 
+		if ( ! Settings::is_https( $hub_url ) && ! Settings::is_http_allowed() ) {
+			return false;
+		}
+
 		$data     = DataCollector::collect();
 		$response = wp_remote_post(
 			\rtrim( $hub_url, '/' ) . '/report',

@@ -34,6 +34,13 @@ class WP_CLI {
 	public static string $error = '';
 
 	/**
+	 * Captured warning messages.
+	 *
+	 * @var array<string>
+	 */
+	public static array $warnings = [];
+
+	/**
 	 * Stub for WP_CLI::log().
 	 *
 	 * @param string $message Message.
@@ -53,6 +60,17 @@ class WP_CLI {
 	 */
 	public static function success( string $message ): void {
 		self::$success = $message;
+	}
+
+	/**
+	 * Stub for WP_CLI::warning().
+	 *
+	 * @param string $message Message.
+	 *
+	 * @return void
+	 */
+	public static function warning( string $message ): void {
+		self::$warnings[] = $message;
 	}
 
 	/**

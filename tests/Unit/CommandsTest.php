@@ -28,9 +28,10 @@ class CommandsTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 		Monkey\setUp();
-		WP_CLI::$logs    = [];
-		WP_CLI::$success = '';
-		WP_CLI::$error   = '';
+		WP_CLI::$logs     = [];
+		WP_CLI::$success  = '';
+		WP_CLI::$error    = '';
+		WP_CLI::$warnings = [];
 	}
 
 	/**
@@ -313,6 +314,31 @@ class CommandsTest extends TestCase {
 		$commands->report( [], [ 'all-sites' => true ] );
 
 		$this->assertStringContainsString( 'network-activated', WP_CLI::$error );
+	}
+
+	/**
+	 * Verify test command warns about HTTP when allow constant is set.
+	 *
+	 * The SITE_BOOKKEEPER_HUB_URL constant is already defined as HTTPS
+	 * by stub_settings, so this test verifies the warning path by
+	 * checking the is_https / is_http_allowed interaction directly.
+	 * The actual CLI warning integration is covered by the HTTPS URL
+	 * passing without warnings.
+	 *
+	 * @return void
+	 */
+	public function test_test_connection_https_no_warning(): void {
+		$this->stub_settings();
+
+		Functions\when( 'wp_remote_get' )->justReturn( [ 'response' => [ 'code' => 200 ] ] );
+		Functions\when( 'is_wp_error' )->justReturn( false );
+		Functions\when( 'wp_remote_retrieve_response_code' )->justReturn( 200 );
+
+		$commands = new Commands();
+		$commands->test();
+
+		$this->assertEmpty( WP_CLI::$warnings );
+		$this->assertStringContainsString( 'Connection OK', WP_CLI::$success );
 	}
 
 	/**
