@@ -75,7 +75,7 @@ class DataCollector {
 			$mysql_version = $wpdb->db_version();
 		}
 
-		// phpcs:ignore Apermo.DataStructures.ArrayComplexity.TooManyKeys -- Data transfer payload.
+		// phpcs:ignore Apermo.DataStructures.ArrayComplexity.TooManyKeysError -- Data transfer payload.
 		return [
 			'wp_version'                    => $GLOBALS['wp_version'] ?? '',
 			'wp_update_available'           => $wp_update_available,
@@ -86,6 +86,7 @@ class DataCollector {
 			'active_theme'                  => $theme->get_stylesheet(),
 			'active_theme_version'          => $theme->get( 'Version' ),
 			'active_theme_update_available' => $active_theme_update,
+			'environment_type'              => wp_get_environment_type(),
 			'mu_plugin_version'             => Plugin::VERSION,
 		];
 	}

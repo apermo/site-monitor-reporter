@@ -54,6 +54,9 @@ class CustomFields {
 		$fields[] = self::get_permalink_structure();
 		$fields[] = self::get_robots_status();
 		$fields[] = self::get_object_cache_status();
+		$fields[] = self::get_wp_debug();
+		$fields[] = self::get_wp_debug_display();
+		$fields[] = self::get_site_health_url();
 
 		$seo_field = self::get_seo_plugin();
 		if ( $seo_field !== null ) {
@@ -84,6 +87,69 @@ class CustomFields {
 			&& \is_string( $field['key'] )
 			&& \is_string( $field['label'] )
 			&& \is_string( $field['value'] );
+	}
+
+	/**
+	 * Get WP_DEBUG field.
+	 *
+	 * @return array{key: string, label: string, value: string, status: string}
+	 */
+	private static function get_wp_debug(): array {
+		$enabled = \defined( 'WP_DEBUG' ) && \WP_DEBUG;
+		$is_production = wp_get_environment_type() === 'production';
+
+		if ( ! $enabled ) {
+			$status = 'good';
+		} elseif ( $is_production ) {
+			$status = 'critical';
+		} else {
+			$status = 'warning';
+		}
+
+		return [
+			'key'    => 'wp_debug',
+			'label'  => 'WP_DEBUG',
+			'value'  => $enabled ? 'enabled' : 'disabled',
+			'status' => $status,
+		];
+	}
+
+	/**
+	 * Get WP_DEBUG_DISPLAY field.
+	 *
+	 * @return array{key: string, label: string, value: string, status: string}
+	 */
+	private static function get_wp_debug_display(): array {
+		$enabled = \defined( 'WP_DEBUG_DISPLAY' ) && \WP_DEBUG_DISPLAY;
+		$is_production = wp_get_environment_type() === 'production';
+
+		if ( ! $enabled ) {
+			$status = 'good';
+		} elseif ( $is_production ) {
+			$status = 'critical';
+		} else {
+			$status = 'warning';
+		}
+
+		return [
+			'key'    => 'wp_debug_display',
+			'label'  => 'WP_DEBUG_DISPLAY',
+			'value'  => $enabled ? 'enabled' : 'disabled',
+			'status' => $status,
+		];
+	}
+
+	/**
+	 * Get Site Health URL field.
+	 *
+	 * @return array{key: string, label: string, value: string}
+	 */
+	private static function get_site_health_url(): array {
+		return [
+			'key'   => 'site_health_url',
+			'label' => 'Site Health',
+			'value' => admin_url( 'site-health.php?tab=debug' ),
+		];
 	}
 
 	/**
