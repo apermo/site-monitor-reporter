@@ -33,8 +33,8 @@ class Commands {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     wp site-bookkeeper report
-	 *     wp site-bookkeeper report --all-sites
+	 *     wp bookkeeper-reporter report
+	 *     wp bookkeeper-reporter report --all-sites
 	 *
 	 * @param array<string>        $args       Positional arguments.
 	 * @param array<string,string> $assoc_args Associative arguments.
@@ -90,8 +90,8 @@ class Commands {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     wp site-bookkeeper status
-	 *     wp site-bookkeeper status --format=summary
+	 *     wp bookkeeper-reporter status
+	 *     wp bookkeeper-reporter status --format=summary
 	 *
 	 * @param array<string>        $args       Positional arguments.
 	 * @param array<string,string> $assoc_args Associative arguments.
@@ -118,7 +118,7 @@ class Commands {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     wp site-bookkeeper test
+	 *     wp bookkeeper-reporter test
 	 *
 	 * @return void
 	 */
@@ -169,7 +169,7 @@ class Commands {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     wp site-bookkeeper network-report
+	 *     wp bookkeeper-reporter network-report
 	 *
 	 * @param array<string>        $args       Positional arguments.
 	 * @param array<string,string> $assoc_args Associative arguments.
@@ -202,7 +202,7 @@ class Commands {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     wp site-bookkeeper network-status
+	 *     wp bookkeeper-reporter network-status
 	 *
 	 * @param array<string>        $args       Positional arguments.
 	 * @param array<string,string> $assoc_args Associative arguments.

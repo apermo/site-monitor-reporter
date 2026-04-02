@@ -32,5 +32,5 @@ require_once __DIR__ . '/vendor/autoload.php';
 Plugin::init( __FILE__ );
 
 if ( \defined( 'WP_CLI' ) && \WP_CLI ) {
-	WP_CLI::add_command( 'site-bookkeeper', CLI\Commands::class );
+	WP_CLI::add_command( 'bookkeeper-reporter', CLI\Commands::class );
 }
