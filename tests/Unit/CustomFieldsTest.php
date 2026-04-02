@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Apermo\SiteMonitorReporter\Tests\Unit;
+namespace Apermo\SiteBookkeeperReporter\Tests\Unit;
 
-use Apermo\SiteMonitorReporter\CustomFields;
+use Apermo\SiteBookkeeperReporter\CustomFields;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use PHPUnit\Framework\TestCase;
@@ -42,7 +42,7 @@ class CustomFieldsTest extends TestCase {
 	public function test_collect_applies_filter(): void {
 		Functions\expect( 'apply_filters' )
 			->once()
-			->with( 'site_monitor_custom_fields', [] )
+			->with( 'site_bookkeeper_custom_fields', [] )
 			->andReturn( [] );
 
 		CustomFields::collect();

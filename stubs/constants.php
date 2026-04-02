@@ -9,6 +9,6 @@
  */
 
 // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound -- User-defined in wp-config.php.
-define( 'SITE_MONITOR_HUB_URL', '' );
+define( 'SITE_BOOKKEEPER_HUB_URL', '' );
 // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound -- User-defined in wp-config.php.
-define( 'SITE_MONITOR_TOKEN', '' );
+define( 'SITE_BOOKKEEPER_TOKEN', '' );

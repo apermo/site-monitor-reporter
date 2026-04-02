@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Apermo\SiteMonitorReporter\Tests\Unit;
+namespace Apermo\SiteBookkeeperReporter\Tests\Unit;
 
-use Apermo\SiteMonitorReporter\RoleCollector;
+use Apermo\SiteBookkeeperReporter\RoleCollector;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use Mockery;

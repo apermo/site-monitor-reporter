@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Apermo\SiteMonitorReporter;
+namespace Apermo\SiteBookkeeperReporter;
 
 use WP_User;
 
@@ -34,7 +34,7 @@ class UserCollector {
 		 *
 		 * @return array<string, mixed>
 		 */
-		$args = apply_filters( 'site_monitor_user_query_args', $default_args ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+		$args = apply_filters( 'site_bookkeeper_user_query_args', $default_args ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 
 		$users = get_users( $args );
 
@@ -70,7 +70,7 @@ class UserCollector {
 		 *
 		 * @return array<string>
 		 */
-		return apply_filters( 'site_monitor_user_meta_keys', $keys ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+		return apply_filters( 'site_bookkeeper_user_meta_keys', $keys ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 	}
 
 	/**

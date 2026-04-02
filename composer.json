@@ -1,6 +1,6 @@
 {
-    "name": "apermo/site-monitor-reporter",
-    "description": "A WordPress site-monitor-reporter plugin.",
+    "name": "apermo/site-bookkeeper-reporter",
+    "description": "A WordPress site-bookkeeper-reporter plugin.",
     "type": "wordpress-plugin",
     "license": "GPL-2.0-or-later",
     "authors": [
@@ -23,12 +23,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Apermo\\SiteMonitorReporter\\": "src/"
+            "Apermo\\SiteBookkeeperReporter\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Apermo\\SiteMonitorReporter\\Tests\\": "tests/"
+            "Apermo\\SiteBookkeeperReporter\\Tests\\": "tests/"
         }
     },
     "scripts": {

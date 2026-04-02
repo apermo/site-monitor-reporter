@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Apermo\SiteMonitorReporter\Tests\Unit;
+namespace Apermo\SiteBookkeeperReporter\Tests\Unit;
 
-use Apermo\SiteMonitorReporter\UserCollector;
+use Apermo\SiteBookkeeperReporter\UserCollector;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use Mockery;
@@ -91,7 +91,7 @@ class UserCollectorTest extends TestCase {
 
 		Functions\when( 'apply_filters' )->alias(
 			static function ( string $hook, mixed ...$args ) use ( &$captured_args ): mixed {
-				if ( $hook === 'site_monitor_user_query_args' ) {
+				if ( $hook === 'site_bookkeeper_user_query_args' ) {
 					$captured_args = $args[0];
 				}
 				return $args[0] ?? null;

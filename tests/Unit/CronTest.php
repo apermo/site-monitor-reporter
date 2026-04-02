@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Apermo\SiteMonitorReporter\Tests\Unit;
+namespace Apermo\SiteBookkeeperReporter\Tests\Unit;
 
-use Apermo\SiteMonitorReporter\Cron;
+use Apermo\SiteBookkeeperReporter\Cron;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use Mockery;
@@ -59,7 +59,7 @@ class CronTest extends TestCase {
 	public function test_schedule_creates_event(): void {
 		Functions\expect( 'wp_next_scheduled' )
 			->once()
-			->with( 'site_monitor_reporter_push' )
+			->with( 'site_bookkeeper_reporter_push' )
 			->andReturn( false );
 
 		Functions\expect( 'wp_schedule_event' )
@@ -67,7 +67,7 @@ class CronTest extends TestCase {
 			->with(
 				Mockery::type( 'int' ),
 				'twicedaily',
-				'site_monitor_reporter_push',
+				'site_bookkeeper_reporter_push',
 			);
 
 		Cron::schedule();
@@ -81,7 +81,7 @@ class CronTest extends TestCase {
 	public function test_schedule_skips_if_already_scheduled(): void {
 		Functions\expect( 'wp_next_scheduled' )
 			->once()
-			->with( 'site_monitor_reporter_push' )
+			->with( 'site_bookkeeper_reporter_push' )
 			->andReturn( 1234567890 );
 
 		Functions\expect( 'wp_schedule_event' )->never();
@@ -97,7 +97,7 @@ class CronTest extends TestCase {
 	public function test_unschedule(): void {
 		Functions\expect( 'wp_clear_scheduled_hook' )
 			->once()
-			->with( 'site_monitor_reporter_push' );
+			->with( 'site_bookkeeper_reporter_push' );
 
 		Cron::unschedule();
 	}

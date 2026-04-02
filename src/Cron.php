@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Apermo\SiteMonitorReporter;
+namespace Apermo\SiteBookkeeperReporter;
 
 /**
  * Manages the cron schedule for pushing reports.
@@ -13,7 +13,7 @@ namespace Apermo\SiteMonitorReporter;
  */
 class Cron {
 
-	public const HOOK = 'site_monitor_reporter_push';
+	public const HOOK = 'site_bookkeeper_reporter_push';
 
 	/**
 	 * Register hooks.

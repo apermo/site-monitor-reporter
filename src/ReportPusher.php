@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Apermo\SiteMonitorReporter;
+namespace Apermo\SiteBookkeeperReporter;
 
 /**
  * Pushes the collected report data to the central monitoring hub.

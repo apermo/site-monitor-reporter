@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Apermo\SiteMonitorReporter\CLI;
+namespace Apermo\SiteBookkeeperReporter\CLI;
 
-use Apermo\SiteMonitorReporter\DataCollector;
-use Apermo\SiteMonitorReporter\ReportPusher;
-use Apermo\SiteMonitorReporter\Settings;
+use Apermo\SiteBookkeeperReporter\DataCollector;
+use Apermo\SiteBookkeeperReporter\ReportPusher;
+use Apermo\SiteBookkeeperReporter\Settings;
 use WP_CLI;
 
 /**
- * WP-CLI commands for the Site Monitor Reporter plugin.
+ * WP-CLI commands for the Site Bookkeeper Reporter plugin.
  *
  * Provides subcommands to push reports, preview collected data,
  * and test the connection to the central monitoring hub.
@@ -25,7 +25,7 @@ class Commands {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     wp site-monitor report
+	 *     wp site-bookkeeper report
 	 *
 	 * @return void
 	 */
@@ -71,8 +71,8 @@ class Commands {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     wp site-monitor status
-	 *     wp site-monitor status --format=summary
+	 *     wp site-bookkeeper status
+	 *     wp site-bookkeeper status --format=summary
 	 *
 	 * @param array<string>        $args       Positional arguments.
 	 * @param array<string,string> $assoc_args Associative arguments.
@@ -108,7 +108,7 @@ class Commands {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     wp site-monitor test
+	 *     wp site-bookkeeper test
 	 *
 	 * @return void
 	 */

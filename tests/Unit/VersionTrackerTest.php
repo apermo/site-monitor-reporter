@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Apermo\SiteMonitorReporter\Tests\Unit;
+namespace Apermo\SiteBookkeeperReporter\Tests\Unit;
 
-use Apermo\SiteMonitorReporter\VersionTracker;
+use Apermo\SiteBookkeeperReporter\VersionTracker;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use DateTimeImmutable;
@@ -109,7 +109,7 @@ class VersionTrackerTest extends TestCase {
 
 		Functions\expect( 'update_option' )
 			->once()
-			->with( 'site_monitor_version_tracking', Mockery::type( 'array' ), false )
+			->with( 'site_bookkeeper_version_tracking', Mockery::type( 'array' ), false )
 			->andReturn( true );
 
 		VersionTracker::get_last_updated( 'plugin', 'acf-pro', '6.4.1' );

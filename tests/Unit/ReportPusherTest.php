@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Apermo\SiteMonitorReporter\Tests\Unit;
+namespace Apermo\SiteBookkeeperReporter\Tests\Unit;
 
-use Apermo\SiteMonitorReporter\ReportPusher;
+use Apermo\SiteBookkeeperReporter\ReportPusher;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use Mockery;
@@ -51,7 +51,7 @@ class ReportPusherTest extends TestCase {
 		// If constants are already defined by a previous test run,
 		// push() will proceed. That's acceptable — we verify the
 		// early-return path only when settings are truly empty.
-		if ( \defined( 'SITE_MONITOR_HUB_URL' ) && \defined( 'SITE_MONITOR_TOKEN' ) ) {
+		if ( \defined( 'SITE_BOOKKEEPER_HUB_URL' ) && \defined( 'SITE_BOOKKEEPER_TOKEN' ) ) {
 			$this->markTestSkipped( 'Constants already defined by another test.' );
 		}
 
@@ -68,12 +68,12 @@ class ReportPusherTest extends TestCase {
 		$this->stub_collector();
 
 		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound -- Reading constant.
-		$expected_token = \SITE_MONITOR_TOKEN;
+		$expected_token = \SITE_BOOKKEEPER_TOKEN;
 
 		Functions\expect( 'wp_remote_post' )
 			->once()
 			->with(
-				'https://monitor.example.tld',
+				'https://monitor.example.tld/report',
 				Mockery::on(
 					static function ( array $args ) use ( $expected_token ): bool {
 						return isset( $args['headers']['Authorization'] )
@@ -154,13 +154,13 @@ class ReportPusherTest extends TestCase {
 	 * @return void
 	 */
 	private function stub_settings(): void {
-		if ( ! \defined( 'SITE_MONITOR_HUB_URL' ) ) {
+		if ( ! \defined( 'SITE_BOOKKEEPER_HUB_URL' ) ) {
 			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound -- Test constant.
-			\define( 'SITE_MONITOR_HUB_URL', 'https://monitor.example.tld' );
+			\define( 'SITE_BOOKKEEPER_HUB_URL', 'https://monitor.example.tld' );
 		}
-		if ( ! \defined( 'SITE_MONITOR_TOKEN' ) ) {
+		if ( ! \defined( 'SITE_BOOKKEEPER_TOKEN' ) ) {
 			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound -- Test constant.
-			\define( 'SITE_MONITOR_TOKEN', 'test-token-123' );
+			\define( 'SITE_BOOKKEEPER_TOKEN', 'test-token-123' );
 		}
 
 		Functions\when( 'get_option' )->justReturn( '' );

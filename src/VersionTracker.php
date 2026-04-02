@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Apermo\SiteMonitorReporter;
+namespace Apermo\SiteBookkeeperReporter;
 
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -17,7 +17,7 @@ use DateTimeZone;
  */
 class VersionTracker {
 
-	private const OPTION_KEY = 'site_monitor_version_tracking';
+	private const OPTION_KEY = 'site_bookkeeper_version_tracking';
 
 	/**
 	 * In-memory cache of tracked versions for the current request.

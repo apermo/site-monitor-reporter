@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Apermo\SiteMonitorReporter;
+namespace Apermo\SiteBookkeeperReporter;
 
 /**
  * Settings page for configuring the monitoring hub connection.
  *
  * Settings can be defined via constants in wp-config.php:
- * - SITE_MONITOR_HUB_URL: The URL of the monitoring hub.
- * - SITE_MONITOR_TOKEN: The authentication token for the hub.
+ * - SITE_BOOKKEEPER_HUB_URL: The URL of the monitoring hub.
+ * - SITE_BOOKKEEPER_TOKEN: The authentication token for the hub.
  *
  * When constants are defined, they take precedence over database options
  * and the corresponding fields are displayed as read-only.
@@ -24,8 +24,8 @@ class Settings {
 	public static function register_hooks(): void {
 		add_action( 'admin_menu', [ self::class, 'add_menu_page' ] );
 		add_action( 'admin_init', [ self::class, 'register_settings' ] );
-		add_action( 'admin_post_site_monitor_install_mu', [ self::class, 'handle_install_mu' ] );
-		add_action( 'admin_post_site_monitor_remove_mu', [ self::class, 'handle_remove_mu' ] );
+		add_action( 'admin_post_site_bookkeeper_install_mu', [ self::class, 'handle_install_mu' ] );
+		add_action( 'admin_post_site_bookkeeper_remove_mu', [ self::class, 'handle_remove_mu' ] );
 	}
 
 	/**
@@ -35,10 +35,10 @@ class Settings {
 	 */
 	public static function add_menu_page(): void {
 		add_options_page(
-			'Site Monitor Reporter',
-			'Site Monitor',
+			'Site Bookkeeper Reporter',
+			'Site Bookkeeper',
 			'manage_options',
-			'site-monitor-reporter',
+			'site-bookkeeper-reporter',
 			[ self::class, 'render_page' ],
 		);
 	}
@@ -50,8 +50,8 @@ class Settings {
 	 */
 	public static function register_settings(): void {
 		register_setting(
-			'site_monitor_reporter',
-			'site_monitor_hub_url',
+			'site_bookkeeper_reporter',
+			'site_bookkeeper_hub_url',
 			[
 				'type'              => 'string',
 				'sanitize_callback' => 'esc_url_raw',
@@ -60,8 +60,8 @@ class Settings {
 		);
 
 		register_setting(
-			'site_monitor_reporter',
-			'site_monitor_token',
+			'site_bookkeeper_reporter',
+			'site_bookkeeper_token',
 			[
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
@@ -70,26 +70,26 @@ class Settings {
 		);
 
 		add_settings_section(
-			'site_monitor_reporter_main',
+			'site_bookkeeper_reporter_main',
 			'Connection Settings',
 			[ self::class, 'render_section' ],
-			'site-monitor-reporter',
+			'site-bookkeeper-reporter',
 		);
 
 		add_settings_field(
-			'site_monitor_hub_url',
+			'site_bookkeeper_hub_url',
 			'Hub URL',
 			[ self::class, 'render_hub_url_field' ],
-			'site-monitor-reporter',
-			'site_monitor_reporter_main',
+			'site-bookkeeper-reporter',
+			'site_bookkeeper_reporter_main',
 		);
 
 		add_settings_field(
-			'site_monitor_token',
+			'site_bookkeeper_token',
 			'Token',
 			[ self::class, 'render_token_field' ],
-			'site-monitor-reporter',
-			'site_monitor_reporter_main',
+			'site-bookkeeper-reporter',
+			'site_bookkeeper_reporter_main',
 		);
 	}
 
@@ -100,10 +100,10 @@ class Settings {
 	 */
 	public static function get_hub_url(): string {
 		if ( self::is_hub_url_constant() ) {
-			return \SITE_MONITOR_HUB_URL;
+			return \SITE_BOOKKEEPER_HUB_URL;
 		}
 
-		return (string) get_option( 'site_monitor_hub_url', '' );
+		return (string) get_option( 'site_bookkeeper_hub_url', '' );
 	}
 
 	/**
@@ -113,10 +113,10 @@ class Settings {
 	 */
 	public static function get_token(): string {
 		if ( self::is_token_constant() ) {
-			return \SITE_MONITOR_TOKEN;
+			return \SITE_BOOKKEEPER_TOKEN;
 		}
 
-		return (string) get_option( 'site_monitor_token', '' );
+		return (string) get_option( 'site_bookkeeper_token', '' );
 	}
 
 	/**
@@ -125,7 +125,7 @@ class Settings {
 	 * @return bool
 	 */
 	public static function is_hub_url_constant(): bool {
-		return \defined( 'SITE_MONITOR_HUB_URL' );
+		return \defined( 'SITE_BOOKKEEPER_HUB_URL' );
 	}
 
 	/**
@@ -134,7 +134,7 @@ class Settings {
 	 * @return bool
 	 */
 	public static function is_token_constant(): bool {
-		return \defined( 'SITE_MONITOR_TOKEN' );
+		return \defined( 'SITE_BOOKKEEPER_TOKEN' );
 	}
 
 	/**
@@ -145,11 +145,11 @@ class Settings {
 	public static function render_page(): void {
 		?>
 		<div class="wrap">
-			<h1>Site Monitor Reporter</h1>
+			<h1>Site Bookkeeper Reporter</h1>
 			<form method="post" action="options.php">
 				<?php
-				settings_fields( 'site_monitor_reporter' );
-				do_settings_sections( 'site-monitor-reporter' );
+				settings_fields( 'site_bookkeeper_reporter' );
+				do_settings_sections( 'site-bookkeeper-reporter' );
 				submit_button();
 				?>
 			</form>
@@ -177,8 +177,8 @@ class Settings {
 				'<form method="post" action="%s">',
 				esc_url( $admin_url ),
 			);
-			echo '<input type="hidden" name="action" value="site_monitor_remove_mu" />';
-			wp_nonce_field( 'site_monitor_remove_mu' );
+			echo '<input type="hidden" name="action" value="site_bookkeeper_remove_mu" />';
+			wp_nonce_field( 'site_bookkeeper_remove_mu' );
 			submit_button( 'Remove MU-Plugin Loader', 'delete', 'submit', false );
 			echo '</form>';
 		} else {
@@ -189,8 +189,8 @@ class Settings {
 				'<form method="post" action="%s">',
 				esc_url( $admin_url ),
 			);
-			echo '<input type="hidden" name="action" value="site_monitor_install_mu" />';
-			wp_nonce_field( 'site_monitor_install_mu' );
+			echo '<input type="hidden" name="action" value="site_bookkeeper_install_mu" />';
+			wp_nonce_field( 'site_bookkeeper_install_mu' );
 			submit_button( 'Install MU-Plugin Loader', 'primary', 'submit', false );
 			echo '</form>';
 		}
@@ -202,10 +202,10 @@ class Settings {
 	 * @return void
 	 */
 	public static function handle_install_mu(): void {
-		check_admin_referer( 'site_monitor_install_mu' );
+		check_admin_referer( 'site_bookkeeper_install_mu' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You do not have permission to do this.', 'site-monitor-reporter' ) );
+			wp_die( esc_html__( 'You do not have permission to do this.', 'site-bookkeeper-reporter' ) );
 		}
 
 		$success = MuPluginInstaller::install();
@@ -222,12 +222,12 @@ class Settings {
 					. '<p><a href="%s">Back to settings</a></p>',
 					esc_html( $path ),
 					esc_html( $content ),
-					esc_url( admin_url( 'options-general.php?page=site-monitor-reporter' ) ),
+					esc_url( admin_url( 'options-general.php?page=site-bookkeeper-reporter' ) ),
 				),
 			);
 		}
 
-		wp_safe_redirect( admin_url( 'options-general.php?page=site-monitor-reporter&mu-installed=1' ) );
+		wp_safe_redirect( admin_url( 'options-general.php?page=site-bookkeeper-reporter&mu-installed=1' ) );
 		exit();
 	}
 
@@ -237,15 +237,15 @@ class Settings {
 	 * @return void
 	 */
 	public static function handle_remove_mu(): void {
-		check_admin_referer( 'site_monitor_remove_mu' );
+		check_admin_referer( 'site_bookkeeper_remove_mu' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You do not have permission to do this.', 'site-monitor-reporter' ) );
+			wp_die( esc_html__( 'You do not have permission to do this.', 'site-bookkeeper-reporter' ) );
 		}
 
 		MuPluginInstaller::uninstall();
 
-		wp_safe_redirect( admin_url( 'options-general.php?page=site-monitor-reporter&mu-removed=1' ) );
+		wp_safe_redirect( admin_url( 'options-general.php?page=site-bookkeeper-reporter&mu-removed=1' ) );
 		exit();
 	}
 
@@ -268,13 +268,13 @@ class Settings {
 		$disabled = self::is_hub_url_constant();
 
 		\printf(
-			'<input type="url" name="site_monitor_hub_url" value="%s" class="regular-text" %s />',
+			'<input type="url" name="site_bookkeeper_hub_url" value="%s" class="regular-text" %s />',
 			esc_attr( $value ),
 			$disabled ? 'disabled="disabled"' : '',
 		);
 
 		if ( $disabled ) {
-			echo '<p class="description">Defined via <code>SITE_MONITOR_HUB_URL</code> constant.</p>';
+			echo '<p class="description">Defined via <code>SITE_BOOKKEEPER_HUB_URL</code> constant.</p>';
 		}
 	}
 
@@ -288,13 +288,13 @@ class Settings {
 		$disabled = self::is_token_constant();
 
 		\printf(
-			'<input type="password" name="site_monitor_token" value="%s" class="regular-text" %s />',
+			'<input type="password" name="site_bookkeeper_token" value="%s" class="regular-text" %s />',
 			esc_attr( $value ),
 			$disabled ? 'disabled="disabled"' : '',
 		);
 
 		if ( $disabled ) {
-			echo '<p class="description">Defined via <code>SITE_MONITOR_TOKEN</code> constant.</p>';
+			echo '<p class="description">Defined via <code>SITE_BOOKKEEPER_TOKEN</code> constant.</p>';
 		}
 	}
 }

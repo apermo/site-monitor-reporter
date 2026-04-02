@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Apermo\SiteMonitorReporter\Tests\Unit;
+namespace Apermo\SiteBookkeeperReporter\Tests\Unit;
 
-use Apermo\SiteMonitorReporter\Plugin;
+use Apermo\SiteBookkeeperReporter\Plugin;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use PHPUnit\Framework\TestCase;
@@ -86,7 +86,7 @@ class PluginTest extends TestCase {
 	public function test_activate_schedules_cron(): void {
 		Functions\expect( 'wp_next_scheduled' )
 			->once()
-			->with( 'site_monitor_reporter_push' )
+			->with( 'site_bookkeeper_reporter_push' )
 			->andReturn( false );
 
 		Functions\expect( 'wp_schedule_event' )->once();
@@ -102,7 +102,7 @@ class PluginTest extends TestCase {
 	public function test_deactivate_unschedules_cron(): void {
 		Functions\expect( 'wp_clear_scheduled_hook' )
 			->once()
-			->with( 'site_monitor_reporter_push' );
+			->with( 'site_bookkeeper_reporter_push' );
 
 		Plugin::deactivate();
 	}

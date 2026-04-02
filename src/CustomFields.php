@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Apermo\SiteMonitorReporter;
+namespace Apermo\SiteBookkeeperReporter;
 
 /**
  * Custom fields filter and default field collectors.
  *
- * Applies the `site_monitor_custom_fields` filter to allow
+ * Applies the `site_bookkeeper_custom_fields` filter to allow
  * third-party extensions, validates the shape of returned entries,
  * and provides built-in default fields.
  */
@@ -28,7 +28,7 @@ class CustomFields {
 		 *
 		 * @return mixed[]
 		 */
-		$fields = apply_filters( 'site_monitor_custom_fields', [] ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+		$fields = apply_filters( 'site_bookkeeper_custom_fields', [] ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 
 		return \array_values( \array_filter( $fields, [ self::class, 'is_valid_field' ] ) );
 	}
@@ -39,7 +39,7 @@ class CustomFields {
 	 * @return void
 	 */
 	public static function register_hooks(): void {
-		add_filter( 'site_monitor_custom_fields', [ self::class, 'collect_defaults' ] );
+		add_filter( 'site_bookkeeper_custom_fields', [ self::class, 'collect_defaults' ] );
 	}
 
 	/**

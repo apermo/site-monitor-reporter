@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Apermo\SiteMonitorReporter\Tests\Unit;
+namespace Apermo\SiteBookkeeperReporter\Tests\Unit;
 
-use Apermo\SiteMonitorReporter\CLI\Commands;
+use Apermo\SiteBookkeeperReporter\CLI\Commands;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use Mockery;
@@ -51,7 +51,7 @@ class CommandsTest extends TestCase {
 	public function test_report_errors_without_settings(): void {
 		Functions\when( 'get_option' )->justReturn( '' );
 
-		if ( \defined( 'SITE_MONITOR_HUB_URL' ) ) {
+		if ( \defined( 'SITE_BOOKKEEPER_HUB_URL' ) ) {
 			$this->markTestSkipped( 'Constants already defined.' );
 		}
 
@@ -153,7 +153,7 @@ class CommandsTest extends TestCase {
 	public function test_test_errors_without_settings(): void {
 		Functions\when( 'get_option' )->justReturn( '' );
 
-		if ( \defined( 'SITE_MONITOR_HUB_URL' ) ) {
+		if ( \defined( 'SITE_BOOKKEEPER_HUB_URL' ) ) {
 			$this->markTestSkipped( 'Constants already defined.' );
 		}
 
@@ -229,13 +229,13 @@ class CommandsTest extends TestCase {
 	 * @return void
 	 */
 	private function stub_settings(): void {
-		if ( ! \defined( 'SITE_MONITOR_HUB_URL' ) ) {
+		if ( ! \defined( 'SITE_BOOKKEEPER_HUB_URL' ) ) {
 			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound -- Test constant.
-			\define( 'SITE_MONITOR_HUB_URL', 'https://monitor.example.tld' );
+			\define( 'SITE_BOOKKEEPER_HUB_URL', 'https://monitor.example.tld' );
 		}
-		if ( ! \defined( 'SITE_MONITOR_TOKEN' ) ) {
+		if ( ! \defined( 'SITE_BOOKKEEPER_TOKEN' ) ) {
 			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound -- Test constant.
-			\define( 'SITE_MONITOR_TOKEN', 'test-token-123' );
+			\define( 'SITE_BOOKKEEPER_TOKEN', 'test-token-123' );
 		}
 
 		Functions\when( 'get_option' )->justReturn( '' );

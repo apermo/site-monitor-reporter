@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Apermo\SiteMonitorReporter\Tests\Unit;
+namespace Apermo\SiteBookkeeperReporter\Tests\Unit;
 
-use Apermo\SiteMonitorReporter\DataCollector;
-use Apermo\SiteMonitorReporter\Plugin;
+use Apermo\SiteBookkeeperReporter\DataCollector;
+use Apermo\SiteBookkeeperReporter\Plugin;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use DateTimeImmutable;

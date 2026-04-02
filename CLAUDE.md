@@ -13,7 +13,7 @@ versions, update availability, custom fields, user info, and roles, then sends t
 
 - `plugin.php` -- main entry point (plugin header, autoloader, `Plugin::init()`)
 - `src/Plugin.php` -- bootstrap class (hooks, activation, deactivation)
-- `src/` -- PSR-4 root (`Apermo\SiteMonitorReporter`)
+- `src/` -- PSR-4 root (`Apermo\SiteBookkeeperReporter`)
 - `tests/Unit/` -- PHPUnit + Brain Monkey unit tests
 - `tests/Integration/` -- WP integration tests
 - `uninstall.php` -- cleanup on uninstall
@@ -26,7 +26,7 @@ versions, update availability, custom fields, user info, and roles, then sends t
 - Testing: PHPUnit + Brain Monkey + Yoast PHPUnit Polyfills
 - Test suites: `tests/Unit/` and `tests/Integration/`
 - Example domains: always use `.tld` TLD (e.g. `https://monitor.example.tld`)
-- Constants: `SITE_MONITOR_HUB_URL`, `SITE_MONITOR_TOKEN`
+- Constants: `SITE_BOOKKEEPER_HUB_URL`, `SITE_BOOKKEEPER_TOKEN`
 
 ## Commands
 

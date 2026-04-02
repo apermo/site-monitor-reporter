@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Apermo\SiteMonitorReporter\Tests\Unit;
+namespace Apermo\SiteBookkeeperReporter\Tests\Unit;
 
-use Apermo\SiteMonitorReporter\Settings;
+use Apermo\SiteBookkeeperReporter\Settings;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use Mockery;
@@ -61,10 +61,10 @@ class SettingsTest extends TestCase {
 		Functions\expect( 'add_options_page' )
 			->once()
 			->with(
-				'Site Monitor Reporter',
-				'Site Monitor',
+				'Site Bookkeeper Reporter',
+				'Site Bookkeeper',
 				'manage_options',
-				'site-monitor-reporter',
+				'site-bookkeeper-reporter',
 				[ Settings::class, 'render_page' ],
 			);
 
@@ -80,46 +80,46 @@ class SettingsTest extends TestCase {
 		Functions\expect( 'register_setting' )
 			->once()
 			->with(
-				'site_monitor_reporter',
-				'site_monitor_hub_url',
+				'site_bookkeeper_reporter',
+				'site_bookkeeper_hub_url',
 				Mockery::type( 'array' ),
 			);
 
 		Functions\expect( 'register_setting' )
 			->once()
 			->with(
-				'site_monitor_reporter',
-				'site_monitor_token',
+				'site_bookkeeper_reporter',
+				'site_bookkeeper_token',
 				Mockery::type( 'array' ),
 			);
 
 		Functions\expect( 'add_settings_section' )
 			->once()
 			->with(
-				'site_monitor_reporter_main',
+				'site_bookkeeper_reporter_main',
 				'Connection Settings',
 				Mockery::type( 'callable' ),
-				'site-monitor-reporter',
+				'site-bookkeeper-reporter',
 			);
 
 		Functions\expect( 'add_settings_field' )
 			->once()
 			->with(
-				'site_monitor_hub_url',
+				'site_bookkeeper_hub_url',
 				'Hub URL',
 				[ Settings::class, 'render_hub_url_field' ],
-				'site-monitor-reporter',
-				'site_monitor_reporter_main',
+				'site-bookkeeper-reporter',
+				'site_bookkeeper_reporter_main',
 			);
 
 		Functions\expect( 'add_settings_field' )
 			->once()
 			->with(
-				'site_monitor_token',
+				'site_bookkeeper_token',
 				'Token',
 				[ Settings::class, 'render_token_field' ],
-				'site-monitor-reporter',
-				'site_monitor_reporter_main',
+				'site-bookkeeper-reporter',
+				'site_bookkeeper_reporter_main',
 			);
 
 		Settings::register_settings();
@@ -133,9 +133,9 @@ class SettingsTest extends TestCase {
 	public function test_get_hub_url_returns_constant(): void {
 		Functions\when( 'get_option' )->justReturn( '' );
 
-		if ( ! \defined( 'SITE_MONITOR_HUB_URL' ) ) {
+		if ( ! \defined( 'SITE_BOOKKEEPER_HUB_URL' ) ) {
 			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound -- Test constant.
-			\define( 'SITE_MONITOR_HUB_URL', 'https://monitor.example.tld' );
+			\define( 'SITE_BOOKKEEPER_HUB_URL', 'https://monitor.example.tld' );
 		}
 
 		$this->assertSame( 'https://monitor.example.tld', Settings::get_hub_url() );
@@ -149,9 +149,9 @@ class SettingsTest extends TestCase {
 	public function test_get_token_returns_constant(): void {
 		Functions\when( 'get_option' )->justReturn( '' );
 
-		if ( ! \defined( 'SITE_MONITOR_TOKEN' ) ) {
+		if ( ! \defined( 'SITE_BOOKKEEPER_TOKEN' ) ) {
 			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound -- Test constant.
-			\define( 'SITE_MONITOR_TOKEN', 'test-token-123' );
+			\define( 'SITE_BOOKKEEPER_TOKEN', 'test-token-123' );
 		}
 
 		$this->assertSame( 'test-token-123', Settings::get_token() );

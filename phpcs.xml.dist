@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    name="site-monitor-reporter"
+    name="site-bookkeeper-reporter"
     xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/PHPCSStandards/PHP_CodeSniffer/master/phpcs.xsd">
 
-    <description>PHPCS configuration for site-monitor-reporter.</description>
+    <description>PHPCS configuration for site-bookkeeper-reporter.</description>
 
     <file>.</file>
     <exclude-pattern>vendor/*</exclude-pattern>
@@ -18,21 +18,21 @@
     <rule ref="WordPress.WP.I18n">
         <properties>
             <property name="text_domain" type="array">
-                <element value="site-monitor-reporter"/>
+                <element value="site-bookkeeper-reporter"/>
             </property>
         </properties>
     </rule>
 
     <!--
         Project prefix for global functions, hooks, constants,
-        and namespace roots. E.g. prefix "Site_Monitor_Reporter" allows
-        namespace Site_Monitor_Reporter\Admin but flags Other\Admin.
+        and namespace roots. E.g. prefix "Site_Bookkeeper_Reporter" allows
+        namespace Site_Bookkeeper_Reporter\Admin but flags Other\Admin.
     -->
     <rule ref="WordPress.NamingConventions.PrefixAllGlobals">
         <properties>
             <property name="prefixes" type="array">
-                <element value="Apermo\SiteMonitorReporter"/>
-                <element value="site_monitor_reporter"/>
+                <element value="Apermo\SiteBookkeeperReporter"/>
+                <element value="site_bookkeeper_reporter"/>
             </property>
         </properties>
         <!-- Test bootstrap uses standard WP test globals, not plugin globals. -->
