@@ -27,6 +27,10 @@ class MultisiteDetector {
 	 * @return bool
 	 */
 	public static function is_network_activated(): bool {
+		if ( ! \function_exists( 'is_plugin_active_for_network' ) ) {
+			return false;
+		}
+
 		return is_plugin_active_for_network(
 			'site-bookkeeper-reporter/plugin.php',
 		);
