@@ -9,6 +9,7 @@
  * Text Domain: site-bookkeeper-reporter
  * Requires at least: 6.2
  * Requires PHP: 8.2
+ * Network:      true
  */
 
 declare(strict_types=1);
