@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Apermo\SiteBookkeeperReporter\CLI;
 
 use Apermo\SiteBookkeeperReporter\DataCollector;
+use Apermo\SiteBookkeeperReporter\MultisiteDetector;
+use Apermo\SiteBookkeeperReporter\NetworkDataCollector;
+use Apermo\SiteBookkeeperReporter\NetworkReportPusher;
 use Apermo\SiteBookkeeperReporter\ReportPusher;
 use Apermo\SiteBookkeeperReporter\Settings;
 use WP_CLI;
@@ -23,13 +26,29 @@ class Commands {
 	 * Triggers the same logic as the cron handler, collecting
 	 * all site data and sending it to the configured hub URL.
 	 *
+	 * ## OPTIONS
+	 *
+	 * [--all-sites]
+	 * : Push reports for all subsites in a multisite network.
+	 *
 	 * ## EXAMPLES
 	 *
 	 *     wp site-bookkeeper report
+	 *     wp site-bookkeeper report --all-sites
+	 *
+	 * @param array<string>        $args       Positional arguments.
+	 * @param array<string,string> $assoc_args Associative arguments.
 	 *
 	 * @return void
 	 */
-	public function report(): void {
+	public function report( array $args = [], array $assoc_args = [] ): void {
+		$all_sites = isset( $assoc_args['all-sites'] );
+
+		if ( $all_sites ) {
+			$this->report_all_sites();
+			return;
+		}
+
 		$hub_url = Settings::get_hub_url();
 		$token   = Settings::get_token();
 
@@ -88,16 +107,7 @@ class Commands {
 			return;
 		}
 
-		// phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode -- CLI output, not HTTP response.
-		$json = \json_encode( $data, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES );
-
-		if ( $json === false ) {
-			WP_CLI::error( 'Failed to encode data as JSON.' );
-
-			return;
-		}
-
-		WP_CLI::log( $json );
+		$this->output_json( $data );
 	}
 
 	/**
@@ -149,6 +159,138 @@ class Commands {
 
 		$body = wp_remote_retrieve_body( $response );
 		WP_CLI::error( 'Hub returned HTTP ' . $code . ': ' . $body );
+	}
+
+	/**
+	 * Push the network report to the monitoring hub.
+	 *
+	 * Collects network-level data and pushes it to the hub.
+	 * Only works when the plugin is network-activated.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     wp site-bookkeeper network-report
+	 *
+	 * @param array<string>        $args       Positional arguments.
+	 * @param array<string,string> $assoc_args Associative arguments.
+	 *
+	 * @return void
+	 */
+	public function network_report( array $args = [], array $assoc_args = [] ): void { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter -- WP-CLI signature.
+		if ( ! $this->require_network_mode() ) {
+			return;
+		}
+
+		$hub_url = Settings::get_hub_url();
+		WP_CLI::log( 'Pushing network report to ' . $hub_url . '...' );
+
+		$success = NetworkReportPusher::push();
+
+		if ( $success ) {
+			WP_CLI::success( 'Network report pushed successfully.' );
+			return;
+		}
+
+		WP_CLI::error( 'Failed to push network report.' );
+	}
+
+	/**
+	 * Preview network data collection without pushing.
+	 *
+	 * Collects network-level data and outputs it as JSON.
+	 * Only works when the plugin is network-activated.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     wp site-bookkeeper network-status
+	 *
+	 * @param array<string>        $args       Positional arguments.
+	 * @param array<string,string> $assoc_args Associative arguments.
+	 *
+	 * @return void
+	 */
+	public function network_status( array $args = [], array $assoc_args = [] ): void { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter -- WP-CLI signature.
+		if ( ! $this->require_network_mode() ) {
+			return;
+		}
+
+		$data = NetworkDataCollector::collect();
+
+		$this->output_json( $data );
+	}
+
+	/**
+	 * Validate that the plugin is network-activated.
+	 *
+	 * @return bool True if in network mode.
+	 */
+	private function require_network_mode(): bool {
+		if ( ! MultisiteDetector::is_multisite() || ! MultisiteDetector::is_network_activated() ) {
+			WP_CLI::error( 'This command requires a network-activated multisite.' );
+
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Push reports for all subsites in the network.
+	 *
+	 * @return void
+	 */
+	private function report_all_sites(): void {
+		if ( ! $this->require_network_mode() ) {
+			return;
+		}
+
+		$hub_url = Settings::get_hub_url();
+		$token   = Settings::get_token();
+
+		if ( $hub_url === '' || $token === '' ) {
+			WP_CLI::error( 'Hub URL and token must be configured.' );
+			return;
+		}
+
+		NetworkReportPusher::push();
+		WP_CLI::log( 'Network report pushed.' );
+
+		$sites = get_sites(
+			[
+				'number' => 0,
+				'fields' => 'ids',
+			],
+		);
+
+		foreach ( $sites as $blog_id ) {
+			switch_to_blog( $blog_id );
+			$site_url = site_url();
+			WP_CLI::log( 'Pushing report for ' . $site_url . '...' );
+			ReportPusher::push();
+			restore_current_blog();
+		}
+
+		WP_CLI::success( 'All site reports pushed.' );
+	}
+
+	/**
+	 * Output data as formatted JSON.
+	 *
+	 * @param array<string, mixed> $data Data to encode.
+	 *
+	 * @return void
+	 */
+	private function output_json( array $data ): void {
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode -- CLI output, not HTTP response.
+		$json = \json_encode( $data, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES );
+
+		if ( $json === false ) {
+			WP_CLI::error( 'Failed to encode data as JSON.' );
+
+			return;
+		}
+
+		WP_CLI::log( $json );
 	}
 
 	/**

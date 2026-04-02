@@ -244,6 +244,78 @@ class CommandsTest extends TestCase {
 	}
 
 	/**
+	 * Verify network-report errors when not on multisite.
+	 *
+	 * @return void
+	 */
+	public function test_network_report_errors_without_multisite(): void {
+		$this->stub_settings();
+		Functions\when( 'is_multisite' )->justReturn( false );
+		Functions\when( 'is_plugin_active_for_network' )->justReturn( false );
+
+		$commands = new Commands();
+		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase -- CLI method name.
+		$commands->network_report( [], [] );
+
+		$this->assertStringContainsString( 'network-activated', WP_CLI::$error );
+	}
+
+	/**
+	 * Verify network-status outputs JSON.
+	 *
+	 * @return void
+	 */
+	public function test_network_status_outputs_json(): void {
+		$this->stub_settings();
+		Functions\when( 'is_multisite' )->justReturn( true );
+		Functions\when( 'is_plugin_active_for_network' )->justReturn( true );
+		$this->stub_network_collector();
+
+		$commands = new Commands();
+		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase -- CLI method name.
+		$commands->network_status( [], [] );
+
+		$output  = \implode( "\n", WP_CLI::$logs );
+		$decoded = \json_decode( $output, true );
+
+		$this->assertIsArray( $decoded );
+		$this->assertArrayHasKey( 'schema_version', $decoded );
+		$this->assertArrayHasKey( 'main_site_url', $decoded );
+	}
+
+	/**
+	 * Verify network-status errors without network activation.
+	 *
+	 * @return void
+	 */
+	public function test_network_status_errors_without_multisite(): void {
+		$this->stub_settings();
+		Functions\when( 'is_multisite' )->justReturn( false );
+		Functions\when( 'is_plugin_active_for_network' )->justReturn( false );
+
+		$commands = new Commands();
+		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase -- CLI method name.
+		$commands->network_status( [], [] );
+
+		$this->assertStringContainsString( 'network-activated', WP_CLI::$error );
+	}
+
+	/**
+	 * Verify report --all-sites errors without multisite.
+	 *
+	 * @return void
+	 */
+	public function test_report_all_sites_errors_without_multisite(): void {
+		$this->stub_settings();
+		$this->stub_collector();
+
+		$commands = new Commands();
+		$commands->report( [], [ 'all-sites' => true ] );
+
+		$this->assertStringContainsString( 'network-activated', WP_CLI::$error );
+	}
+
+	/**
 	 * Stub DataCollector dependencies.
 	 *
 	 * @return void
@@ -265,6 +337,8 @@ class CommandsTest extends TestCase {
 		Functions\when( 'add_action' )->justReturn( null );
 		Functions\when( 'get_users' )->justReturn( [] );
 		Functions\when( 'is_plugin_active' )->justReturn( false );
+		Functions\when( 'is_plugin_active_for_network' )->justReturn( false );
+		Functions\when( 'get_site_option' )->justReturn( [] );
 
 		$mock_roles = Mockery::mock( 'WP_Roles' );
 		$mock_roles->roles = [];
@@ -295,6 +369,29 @@ class CommandsTest extends TestCase {
 				public function get_stylesheet(): string {
 					return 'test-theme';
 				}
+			},
+		);
+	}
+
+	/**
+	 * Stub NetworkDataCollector dependencies.
+	 *
+	 * @return void
+	 */
+	private function stub_network_collector(): void {
+		Functions\when( 'network_site_url' )
+			->justReturn( 'https://network.example.tld/' );
+		Functions\when( 'get_sites' )->justReturn( [] );
+		Functions\when( 'get_site_option' )->alias(
+			static function ( string $option, mixed $fallback = false ): mixed {
+				return $fallback;
+			},
+		);
+		Functions\when( 'get_plugins' )->justReturn( [] );
+		Functions\when( 'get_super_admins' )->justReturn( [] );
+		Functions\when( 'apply_filters' )->alias(
+			static function ( string $hook, mixed ...$args ): mixed {
+				return $args[0] ?? null;
 			},
 		);
 	}
