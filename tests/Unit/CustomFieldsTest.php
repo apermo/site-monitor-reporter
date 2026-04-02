@@ -203,5 +203,9 @@ class CustomFieldsTest extends TestCase {
 
 		Functions\when( 'wp_using_ext_object_cache' )->justReturn( false );
 		Functions\when( 'is_plugin_active' )->justReturn( false );
+		Functions\when( 'wp_get_environment_type' )->justReturn( 'production' );
+		Functions\when( 'admin_url' )->alias(
+			static fn( string $path = '' ): string => 'https://example.tld/wp-admin/' . $path,
+		);
 	}
 }
