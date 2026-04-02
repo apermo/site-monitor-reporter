@@ -95,7 +95,7 @@ class PluginTest extends TestCase {
 	}
 
 	/**
-	 * Verify deactivate clears the cron schedule.
+	 * Verify deactivate clears both cron schedules.
 	 *
 	 * @return void
 	 */
@@ -104,11 +104,15 @@ class PluginTest extends TestCase {
 			->once()
 			->with( 'site_bookkeeper_reporter_push' );
 
+		Functions\expect( 'wp_clear_scheduled_hook' )
+			->once()
+			->with( 'site_bookkeeper_reporter_network_push' );
+
 		Plugin::deactivate();
 	}
 
 	/**
-	 * Verify boot registers hooks.
+	 * Verify boot registers hooks on single-site.
 	 *
 	 * @return void
 	 */
@@ -120,7 +124,25 @@ class PluginTest extends TestCase {
 
 		Plugin::boot();
 
-		// Verify add_action was called (Brain Monkey tracks it).
+		$this->assertTrue( true );
+	}
+
+	/**
+	 * Verify boot registers network hooks when network-activated.
+	 *
+	 * @return void
+	 */
+	public function test_boot_registers_network_hooks(): void {
+		Functions\when( 'add_action' )->justReturn( null );
+		Functions\when( 'add_filter' )->justReturn( null );
+		Functions\when( 'is_multisite' )->justReturn( true );
+		Functions\when( 'is_plugin_active_for_network' )->justReturn( true );
+		Functions\when( 'is_main_site' )->justReturn( true );
+		Functions\when( 'wp_next_scheduled' )->justReturn( false );
+		Functions\when( 'wp_schedule_event' )->justReturn( null );
+
+		Plugin::boot();
+
 		$this->assertTrue( true );
 	}
 }

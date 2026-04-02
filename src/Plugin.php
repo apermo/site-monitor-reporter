@@ -58,6 +58,7 @@ class Plugin {
 	 */
 	public static function deactivate(): void {
 		Cron::unschedule();
+		Cron::unschedule_network();
 	}
 
 	/**
@@ -70,6 +71,23 @@ class Plugin {
 		Cron::register_hooks();
 		CustomFields::register_hooks();
 
-		add_action( Cron::HOOK, [ Cron::class, 'on_version_check' ] );
+		if ( MultisiteDetector::is_multisite() && MultisiteDetector::is_network_activated() ) {
+			self::boot_network();
+		} else {
+			add_action( Cron::HOOK, [ Cron::class, 'on_version_check' ] );
+		}
+	}
+
+	/**
+	 * Register network-specific hooks on the main site.
+	 *
+	 * @return void
+	 */
+	private static function boot_network(): void {
+		add_action( Cron::NETWORK_HOOK, [ Cron::class, 'on_network_push' ] );
+
+		if ( MultisiteDetector::is_main_site() ) {
+			Cron::schedule_network();
+		}
 	}
 }

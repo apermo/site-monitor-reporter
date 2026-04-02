@@ -101,4 +101,67 @@ class CronTest extends TestCase {
 
 		Cron::unschedule();
 	}
+
+	/**
+	 * Verify on_network_push returns early if not network-activated.
+	 *
+	 * @return void
+	 */
+	public function test_on_network_push_returns_early_without_network(): void {
+		Functions\when( 'is_multisite' )->justReturn( false );
+		Functions\when( 'is_plugin_active_for_network' )->justReturn( false );
+
+		// No calls to push should happen.
+		Functions\expect( 'wp_remote_post' )->never();
+
+		Cron::on_network_push();
+
+		// If we reach here without error, the method returned early.
+		$this->assertTrue( true );
+	}
+
+	/**
+	 * Verify on_network_push returns early if not main site.
+	 *
+	 * @return void
+	 */
+	public function test_on_network_push_returns_early_on_subsite(): void {
+		Functions\when( 'is_multisite' )->justReturn( true );
+		Functions\when( 'is_plugin_active_for_network' )->justReturn( true );
+		Functions\when( 'is_main_site' )->justReturn( false );
+
+		Functions\expect( 'wp_remote_post' )->never();
+
+		Cron::on_network_push();
+
+		$this->assertTrue( true );
+	}
+
+	/**
+	 * Verify on_version_check is a no-op when network-activated.
+	 *
+	 * @return void
+	 */
+	public function test_on_version_check_noop_when_network_activated(): void {
+		Functions\when( 'is_multisite' )->justReturn( true );
+		Functions\when( 'is_plugin_active_for_network' )->justReturn( true );
+
+		Functions\expect( 'wp_remote_post' )->never();
+
+		Cron::on_version_check();
+
+		$this->assertTrue( true );
+	}
+
+	/**
+	 * Verify NETWORK_HOOK constant is defined.
+	 *
+	 * @return void
+	 */
+	public function test_network_hook_constant(): void {
+		$this->assertSame(
+			'site_bookkeeper_reporter_network_push',
+			Cron::NETWORK_HOOK,
+		);
+	}
 }
