@@ -50,6 +50,8 @@ class CommandsTest extends TestCase {
 	 */
 	public function test_report_errors_without_settings(): void {
 		Functions\when( 'get_option' )->justReturn( '' );
+		Functions\when( 'is_multisite' )->justReturn( false );
+		Functions\when( 'is_plugin_active_for_network' )->justReturn( false );
 
 		if ( \defined( 'SITE_BOOKKEEPER_HUB_URL' ) ) {
 			$this->markTestSkipped( 'Constants already defined.' );

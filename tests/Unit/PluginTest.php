@@ -114,6 +114,9 @@ class PluginTest extends TestCase {
 	 */
 	public function test_boot_registers_hooks(): void {
 		Functions\when( 'add_action' )->justReturn( null );
+		Functions\when( 'add_filter' )->justReturn( null );
+		Functions\when( 'is_multisite' )->justReturn( false );
+		Functions\when( 'is_plugin_active_for_network' )->justReturn( false );
 
 		Plugin::boot();
 
