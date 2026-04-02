@@ -101,6 +101,10 @@ class DataCollector {
 		$active_plugins = (array) get_option( 'active_plugins', [] );
 		$result         = [];
 
+		$network_plugins = is_multisite()
+			? \array_keys( (array) get_site_option( 'active_sitewide_plugins', [] ) )
+			: [];
+
 		foreach ( $all_plugins as $file => $plugin_data ) {
 			$slug             = \dirname( $file );
 			$update_available = null;
@@ -116,6 +120,7 @@ class DataCollector {
 				'version'          => $plugin_data['Version'] ?? '',
 				'update_available' => $update_available,
 				'active'           => \in_array( $file, $active_plugins, true ),
+				'network_active'   => \in_array( $file, $network_plugins, true ),
 				'last_updated'     => VersionTracker::get_last_updated( 'plugin', $slug === '.' ? \basename( $file, '.php' ) : $slug, $plugin_data['Version'] ?? '' ),
 			];
 		}
