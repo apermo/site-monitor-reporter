@@ -6,6 +6,9 @@ namespace Apermo\SiteBookkeeperReporter;
 
 /**
  * Pushes the collected report data to the central monitoring hub.
+ *
+ * Stores the enriched hub response (category, vulnerabilities)
+ * in a transient for use by AdminNotice.
  */
 class ReportPusher {
 
@@ -45,6 +48,42 @@ class ReportPusher {
 
 		$code = (int) wp_remote_retrieve_response_code( $response );
 
-		return $code >= 200 && $code < 300;
+		if ( $code >= 200 && $code < 300 ) {
+			self::store_hub_response( $response );
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Parse and store the enriched hub response.
+	 *
+	 * @param array<string, mixed> $response wp_remote_post response.
+	 *
+	 * @return void
+	 */
+	private static function store_hub_response( array $response ): void {
+		$body = wp_remote_retrieve_body( $response );
+		$data = \json_decode( $body, true );
+
+		if ( ! \is_array( $data ) ) {
+			return;
+		}
+
+		$hub_status = [];
+
+		if ( isset( $data['category'] ) && \is_array( $data['category'] ) ) {
+			$hub_status['category'] = $data['category'];
+		}
+
+		if ( isset( $data['vulnerabilities'] ) && \is_array( $data['vulnerabilities'] ) ) {
+			$hub_status['vulnerabilities'] = $data['vulnerabilities'];
+		}
+
+		if ( $hub_status !== [] ) {
+			set_transient( AdminNotice::HUB_STATUS_TRANSIENT, $hub_status, \DAY_IN_SECONDS );
+		}
 	}
 }

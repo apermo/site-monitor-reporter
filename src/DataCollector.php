@@ -114,15 +114,24 @@ class DataCollector {
 				$update_available = $plugin_updates->response[ $file ]->new_version ?? null;
 			}
 
-			// phpcs:ignore Apermo.DataStructures.ArrayComplexity.TooManyKeys -- Data transfer payload.
+			$resolved_slug = $slug === '.' ? \basename( $file, '.php' ) : $slug;
+			$version = $plugin_data['Version'] ?? '';
+
+			$release_info = $update_available !== null
+				? UpdateReleaseTracker::get_update_since( $resolved_slug, $version, (string) $update_available )
+				: null;
+
+			// phpcs:ignore Apermo.DataStructures.ArrayComplexity -- Data transfer payload.
 			$result[] = [
-				'slug'             => $slug === '.' ? \basename( $file, '.php' ) : $slug,
-				'name'             => $plugin_data['Name'] ?? '',
-				'version'          => $plugin_data['Version'] ?? '',
-				'update_available' => $update_available,
-				'active'           => \in_array( $file, $active_plugins, true ),
-				'network_active'   => \in_array( $file, $network_plugins, true ),
-				'last_updated'     => VersionTracker::get_last_updated( 'plugin', $slug === '.' ? \basename( $file, '.php' ) : $slug, $plugin_data['Version'] ?? '' ),
+				'slug'                          => $resolved_slug,
+				'name'                          => $plugin_data['Name'] ?? '',
+				'version'                       => $version,
+				'update_available'              => $update_available,
+				'active'                        => \in_array( $file, $active_plugins, true ),
+				'network_active'                => \in_array( $file, $network_plugins, true ),
+				'last_updated'                  => VersionTracker::get_last_updated( 'plugin', $resolved_slug, $version ),
+				'update_available_since'        => $release_info['since'] ?? null,
+				'update_available_since_source' => $release_info['source'] ?? null,
 			];
 		}
 

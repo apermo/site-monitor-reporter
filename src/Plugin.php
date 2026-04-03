@@ -70,6 +70,7 @@ class Plugin {
 		Settings::register_hooks();
 		Cron::register_hooks();
 		CustomFields::register_hooks();
+		AdminNotice::init();
 
 		if ( MultisiteDetector::is_multisite() && MultisiteDetector::is_network_activated() ) {
 			self::boot_network();
