@@ -37,6 +37,8 @@ class UpdateReleaseTracker {
 	 */
 	public static function get_update_since( string $slug, string $installed_version, string $update_available ): ?array {
 		if ( $update_available === '' ) {
+			self::clear_slug( $slug );
+
 			return null;
 		}
 
@@ -59,6 +61,7 @@ class UpdateReleaseTracker {
 		}
 
 		$cache[ $cache_key ] = $result;
+		$cache = self::prune_stale_entries( $cache, $slug, $cache_key );
 		self::save_cache( $cache );
 
 		return $result;
@@ -197,6 +200,51 @@ class UpdateReleaseTracker {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Remove all cache entries for a slug (plugin is up to date).
+	 *
+	 * @param string $slug Plugin slug.
+	 *
+	 * @return void
+	 */
+	private static function clear_slug( string $slug ): void {
+		$cache = self::load_cache();
+		$prefix = $slug . ':';
+		$changed = false;
+
+		foreach ( \array_keys( $cache ) as $key ) {
+			if ( \str_starts_with( $key, $prefix ) ) {
+				unset( $cache[ $key ] );
+				$changed = true;
+			}
+		}
+
+		if ( $changed ) {
+			self::save_cache( $cache );
+		}
+	}
+
+	/**
+	 * Remove old version entries for a slug, keeping only the current one.
+	 *
+	 * @param array<string, array{since: string, source: string}> $cache    Cache data.
+	 * @param string                                              $slug     Plugin slug.
+	 * @param string                                              $keep_key Cache key to keep.
+	 *
+	 * @return array<string, array{since: string, source: string}>
+	 */
+	private static function prune_stale_entries( array $cache, string $slug, string $keep_key ): array {
+		$prefix = $slug . ':';
+
+		foreach ( \array_keys( $cache ) as $key ) {
+			if ( \str_starts_with( $key, $prefix ) && $key !== $keep_key ) {
+				unset( $cache[ $key ] );
+			}
+		}
+
+		return $cache;
 	}
 
 	/**
