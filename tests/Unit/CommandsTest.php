@@ -365,6 +365,14 @@ class CommandsTest extends TestCase {
 		Functions\when( 'is_plugin_active' )->justReturn( false );
 		Functions\when( 'is_plugin_active_for_network' )->justReturn( false );
 		Functions\when( 'get_site_option' )->justReturn( [] );
+		Functions\when( 'wp_get_environment_type' )->justReturn( 'production' );
+		Functions\when( 'admin_url' )->alias(
+			static fn( string $path = '' ): string => 'https://example.tld/wp-admin/' . $path,
+		);
+		Functions\when( 'get_option' )->justReturn( [] );
+		Functions\when( 'wp_remote_retrieve_body' )->justReturn( '{}' );
+		Functions\when( 'set_transient' )->justReturn( true );
+		Functions\when( 'wp_using_ext_object_cache' )->justReturn( false );
 
 		$mock_roles = Mockery::mock( 'WP_Roles' );
 		$mock_roles->roles = [];
