@@ -4,6 +4,7 @@ A monitoring tool for your WordPress Sites — Reporter Plugin
 
 [![PHP CI](https://github.com/apermo/site-bookkeeper-reporter/actions/workflows/ci.yml/badge.svg)](https://github.com/apermo/site-bookkeeper-reporter/actions/workflows/ci.yml)
 [![License: GPL v2+](https://img.shields.io/badge/License-GPLv2+-blue.svg)](LICENSE)
+[![Packagist Version](https://img.shields.io/packagist/v/apermo/site-bookkeeper-reporter)](https://packagist.org/packages/apermo/site-bookkeeper-reporter)
 
 WordPress plugin that collects site health data (core version, plugins, themes, users, roles, custom fields)
 and pushes it to a central [Site Bookkeeper Hub](https://github.com/apermo/site-bookkeeper-hub) on a
