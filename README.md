@@ -159,6 +159,13 @@ composer analyse         # Run PHPStan
 composer test:unit       # Run unit tests
 ```
 
+## Related
+
+- [Site Bookkeeper Hub](https://github.com/apermo/site-bookkeeper-hub) — Central API that stores and serves
+  the collected data
+- [Site Bookkeeper Dashboard](https://github.com/apermo/site-bookkeeper-dashboard) — WordPress admin dashboard
+  for viewing site health data across all monitored sites
+
 ## License
 
 [GPL-2.0-or-later](LICENSE)
