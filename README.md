@@ -3,6 +3,7 @@
 A monitoring tool for your WordPress Sites — Reporter Plugin
 
 [![PHP CI](https://github.com/apermo/site-bookkeeper-reporter/actions/workflows/ci.yml/badge.svg)](https://github.com/apermo/site-bookkeeper-reporter/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/apermo/site-bookkeeper-reporter/graph/badge.svg)](https://codecov.io/gh/apermo/site-bookkeeper-reporter)
 [![License: GPL v2+](https://img.shields.io/badge/License-GPLv2+-blue.svg)](LICENSE)
 [![Packagist Version](https://img.shields.io/packagist/v/apermo/site-bookkeeper-reporter)](https://packagist.org/packages/apermo/site-bookkeeper-reporter)
 [![PHP Version](https://img.shields.io/packagist/dependency-v/apermo/site-bookkeeper-reporter/php)](https://packagist.org/packages/apermo/site-bookkeeper-reporter)
