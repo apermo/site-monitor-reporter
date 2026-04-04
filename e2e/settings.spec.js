@@ -22,7 +22,7 @@ test('saving settings shows success message', async ({ page }) => {
 
 	await page.locator('input[name="site_bookkeeper_hub_url"]').fill('https://monitor.example.tld');
 	await page.locator('input[name="site_bookkeeper_token"]').fill('test-token-123');
-	await page.locator('#submit').click();
+	await page.locator('form[action="options.php"] #submit').click();
 
 	await expect(page.locator('#setting-error-settings_updated, .notice-success')).toBeVisible();
 });

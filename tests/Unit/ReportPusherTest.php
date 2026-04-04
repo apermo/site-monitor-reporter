@@ -85,6 +85,8 @@ class ReportPusherTest extends TestCase {
 
 		Functions\when( 'is_wp_error' )->justReturn( false );
 		Functions\when( 'wp_remote_retrieve_response_code' )->justReturn( 200 );
+		Functions\when( 'wp_remote_retrieve_body' )->justReturn( '{}' );
+		Functions\when( 'set_transient' )->justReturn( true );
 
 		$this->assertTrue( ReportPusher::push() );
 	}
@@ -144,6 +146,8 @@ class ReportPusherTest extends TestCase {
 
 		Functions\when( 'is_wp_error' )->justReturn( false );
 		Functions\when( 'wp_remote_retrieve_response_code' )->justReturn( 200 );
+		Functions\when( 'wp_remote_retrieve_body' )->justReturn( '{}' );
+		Functions\when( 'set_transient' )->justReturn( true );
 
 		ReportPusher::push();
 	}
@@ -189,6 +193,7 @@ class ReportPusherTest extends TestCase {
 		Functions\when( 'add_action' )->justReturn( null );
 		Functions\when( 'get_users' )->justReturn( [] );
 		Functions\when( 'is_plugin_active' )->justReturn( false );
+		Functions\when( 'wp_get_environment_type' )->justReturn( 'production' );
 
 		$mock_roles = Mockery::mock( 'WP_Roles' );
 		$mock_roles->roles = [];
