@@ -10,4 +10,5 @@ playwright-report/
 test-results/
 
 # WordPress core (downloaded by DDEV orchestrate)
-.ddev/wordpress/
+.ddev/wordpress/*
+!.ddev/wordpress/.gitkeep

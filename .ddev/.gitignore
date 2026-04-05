@@ -16,4 +16,5 @@ commands/
 orchestrate/
 
 # WordPress (downloaded by orchestrate)
-wordpress/
+wordpress/*
+!wordpress/.gitkeep
