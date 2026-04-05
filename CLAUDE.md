@@ -49,7 +49,8 @@ ddev start && ddev orchestrate   # Full WordPress environment
 
 - Uses `apermo/ddev-orchestrate` addon
 - Project type is `php` (not `wordpress`), so WP-CLI uses a custom `ddev wp` command wrapper
-- Bind-mounts repo into `wp-content/plugins/`
+- WordPress installs into `.ddev/wordpress/` subdirectory (keeps project root clean)
+- `ddev-orchestrate` symlinks the project into the WP plugins/themes directory automatically
 
 ## Git Hooks
 

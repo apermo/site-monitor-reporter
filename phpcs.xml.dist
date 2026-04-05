@@ -10,6 +10,7 @@
     <exclude-pattern>node_modules/*</exclude-pattern>
     <exclude-pattern>stubs/wp-cli-stubs.php</exclude-pattern>
     <exclude-pattern>stubs/wp-cli-utils-stubs.php</exclude-pattern>
+    <exclude-pattern>.ddev/*</exclude-pattern>
 
     <arg name="extensions" value="php"/>
 
