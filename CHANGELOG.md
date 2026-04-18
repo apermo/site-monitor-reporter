@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - DDEV `orchestrate` command failing on fresh clones and in CI by installing
   the `apermo/ddev-orchestrate` addon via a `pre-start` hook (#22)
 
+### Added
+
+- `.wp-env.json` for the E2E workflow to boot `wp-env` against the plugin
+
 ### Changed
 
 - Pinned reusable GitHub Actions workflows to the floating `v0.4` tag
