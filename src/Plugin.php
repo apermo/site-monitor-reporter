@@ -9,7 +9,7 @@ namespace Apermo\SiteBookkeeperReporter;
  */
 class Plugin {
 
-	public const VERSION = '0.1.2';
+	public const VERSION = '0.1.3';
 
 	/**
 	 * Main plugin file path.
