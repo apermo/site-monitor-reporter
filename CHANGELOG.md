@@ -14,7 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Pinned reusable GitHub Actions workflows to `v0.4.3` (previously tracked `main`)
+- Pinned reusable GitHub Actions workflows to the floating `v0.4` tag
+  (previously tracked `main`)
 
 ## [0.1.2] - 2026-04-05
 
