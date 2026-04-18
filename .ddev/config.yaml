@@ -2,3 +2,6 @@ name: site-bookkeeper-reporter
 type: php
 docroot: .ddev/wordpress
 php_version: "8.4"
+hooks:
+    pre-start:
+        - exec-host: ddev add-on get apermo/ddev-orchestrate 2>/dev/null || true
